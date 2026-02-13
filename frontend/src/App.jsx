@@ -1,6 +1,7 @@
 import CompanyForm from "./components/CompanyForm";
 import ProductForm from "./components/ProductForm";
 import InvoiceTable from "./components/InvoiceTable";
+import OrderForm from "./components/OrderForm";
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <CompanyForm />
       <ProductForm />
       <InvoiceTable />
+      <OrderForm/>
     </>
   );
 }

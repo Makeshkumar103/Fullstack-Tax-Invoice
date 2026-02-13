@@ -6,7 +6,12 @@ export default function InvoiceTable() {
 
   useEffect(() => {
     fetch("http://localhost:5000/orders")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
       .then(setData);
   }, []);
 
