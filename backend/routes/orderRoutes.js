@@ -12,8 +12,8 @@ router.post("/", (req, res) => {
   db.query(productQuery, [product_id], (err, result) => {
     if (err) return res.status(500).json(err);
 
-    const unitPrice = result[0].unit_price;
-    const vatRate = result[0].vat_rate;
+    const unitPrice = result[0]?.unit_price;
+    const vatRate = result[0]?.vat_rate;
 
     const totalPrice = unitPrice * quantity;
     const vatAmount = totalPrice * (vatRate / 100);
