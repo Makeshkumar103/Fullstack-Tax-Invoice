@@ -11,9 +11,8 @@ router.post("/", (req, res) => {
 
   db.query(productQuery, [product_id], (err, result) => {
     if (err) return res.status(500).json(err);
-
-    const unitPrice = result[0]?.unit_price;
-    const vatRate = result[0]?.vat_rate;
+    const unitPrice = parseFloat(result[0]?.unit_price) || 0;
+    const vatRate = parseFloat(result[0]?.vat_rate) || 0;
 
     const totalPrice = unitPrice * quantity;
     const vatAmount = totalPrice * (vatRate / 100);
@@ -27,8 +26,10 @@ router.post("/", (req, res) => {
     db.query(
       orderQuery,
       [company_id, product_id, quantity, totalPrice, vatAmount],
-      () => {
-        res.json({ message: "Order created successfully" });
+      (err2, result2) => {
+        if (err2) return res.status(500).json(err2);
+        const insertedId = result2.insertId;
+        res.json({ message: "Order created successfully", id: insertedId });
       }
     );
   });
@@ -37,16 +38,24 @@ router.post("/", (req, res) => {
 // Get invoices
 router.get("/", (req, res) => {
   const sql = `
-    SELECT c.name AS company,
-           p.name AS product,
+    SELECT o.id,
+           o.company_id,
+           o.product_id,
+           c.name AS company_name,
+           c.address AS company_address,
+           p.name AS product_name,
+           p.unit_price,
+           p.vat_rate,
            o.quantity,
            o.total_price,
            o.vat_amount
     FROM orders o
     JOIN companies c ON o.company_id = c.id
     JOIN products p ON o.product_id = p.id
+    ORDER BY o.id DESC
   `;
   db.query(sql, (err, results) => {
+    if (err) return res.status(500).json(err);
     res.json(results);
   });
 });
