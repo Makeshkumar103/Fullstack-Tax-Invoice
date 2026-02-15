@@ -32,7 +32,7 @@ export default function OrderForm2() {
   const handleCompanyOpen = async () => {
     setError("");
     try {
-      const res = await fetch("http://localhost:5000/companies");
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/companies`);
       if (!res.ok) throw new Error("Failed to load companies");
       const data = await res.json();
       setCompanies(data || []);

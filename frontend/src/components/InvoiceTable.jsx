@@ -29,7 +29,7 @@ export default function InvoiceTable() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("http://localhost:5000/orders");
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/orders`);
       if (!res.ok) throw new Error("Failed to fetch orders");
       const orders = await res.json();
       
